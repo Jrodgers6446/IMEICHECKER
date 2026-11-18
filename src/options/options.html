@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IMEI Checker settings</title>
+    <link rel="stylesheet" href="../ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <h1>IMEI Checker settings</h1>
+      <p class="lead">
+        Offline lookups work with no setup. Everything below is optional and stored only in this browser.
+      </p>
+
+      <form id="form" autocomplete="off">
+        <section class="card">
+          <h2>Online lookup</h2>
+          <p class="muted">
+            Add your own API key to get more than brand and model: blacklist status, device specs and more.
+            When this is on, the IMEI you check is sent to the provider you pick, and only then.
+          </p>
+
+          <label for="provider">Provider</label>
+          <select id="provider"></select>
+          <p id="provider-info" class="muted"></p>
+
+          <label for="key">API key</label>
+          <input id="key" type="password" spellcheck="false" autocomplete="off" aria-describedby="key-note" />
+          <p id="key-note" class="muted"></p>
+
+          <label class="check">
+            <input id="online" type="checkbox" />
+            <span>Use the online provider for every lookup</span>
+          </label>
+        </section>
+
+        <section class="card">
+          <h2>History</h2>
+          <label class="check">
+            <input id="history" type="checkbox" />
+            <span>Remember my last 10 lookups on this device</span>
+          </label>
+          <button id="clear-history" class="btn" type="button">Clear history now</button>
+        </section>
+
+        <div class="actions">
+          <button class="btn primary" type="submit">Save</button>
+          <button id="remove-key" class="btn" type="button">Remove saved key</button>
+          <span id="status" role="status"></span>
+        </div>
+      </form>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

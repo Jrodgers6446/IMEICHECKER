@@ -1,0 +1,13 @@
+{
+  "name": "imeichecker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome extension (Manifest V3) that validates an IMEI and looks up the device from a bundled offline TAC database.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "build:icons": "node scripts/make-icons.mjs",
+    "build:data": "node scripts/build-tacdb.mjs"
+  }
+}
