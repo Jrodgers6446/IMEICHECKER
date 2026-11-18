@@ -27,7 +27,7 @@ test('every file the manifest points at exists', () => {
 test('permissions stay minimal and hosts are optional', () => {
   assert.deepEqual([...manifest.permissions].sort(), ['contextMenus', 'storage']);
   assert.equal(manifest.host_permissions, undefined);
-  assert.deepEqual(manifest.optional_host_permissions, ['https://imeidb.xyz/*']);
+  assert.deepEqual(manifest.optional_host_permissions, ['https://imeidb.xyz/*', 'https://api.imeigsx.com/*']);
   assert.equal(manifest.content_scripts, undefined);
   assert.equal(manifest.content_security_policy, undefined);
 });
@@ -45,4 +45,9 @@ test('no source file ships hardcoded API keys or remote code', () => {
     const code = readFileSync(new URL(file, root), 'utf8');
     assert.ok(!/\beval\(|new Function\(|import\(\s*['"]https?:/.test(code), file);
   }
+});
+
+test('each provider host is declared as an optional permission', async () => {
+  const { providers } = await import('../src/providers/index.js');
+  for (const p of providers) assert.ok(manifest.optional_host_permissions.includes(p.hostPermission), p.id);
 });

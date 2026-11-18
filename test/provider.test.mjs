@@ -42,6 +42,14 @@ test('imeidb normalize maps the documented response', () => {
   assert.equal(byLabel['Model numbers'], 'A2218, A2161, A2220');
   assert.equal(byLabel.NFC, 'Yes');
   assert.deepEqual(out.status, { label: 'Blacklist', value: 'Clean', level: 'good' });
+  assert.equal(out.color, null);
+});
+
+test('imeidb documents no color field, so it never reports one', () => {
+  const withNoise = structuredClone(DOC_EXAMPLE);
+  withNoise.data.color = 'Red';
+  assert.equal(normalize(withNoise).color, null);
+  assert.equal(imeidb.returnsColor, false);
 });
 
 test('imeidb flags blacklisted devices and skips missing fields', () => {

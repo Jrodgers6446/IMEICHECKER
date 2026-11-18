@@ -11,7 +11,7 @@ IMEI Checker does not collect, sell or share any data. There is no analytics, no
 
 **Only if you turn it on**
 
-If you enable online lookup and save your own API key, each IMEI you check is sent to the provider you chose (currently ImeiDB, `imeidb.xyz`) together with your key. That provider's terms and privacy policy apply to what it does with it. Chrome asks for permission to contact the provider the first time.
+If you enable online lookup and save your own API key, each IMEI you check is sent to the provider you chose (ImeiDB, `imeidb.xyz`, or iSave, `api.imeigsx.com`) together with your key. That provider's terms and privacy policy apply to what it does with it. Chrome asks for permission to contact the provider the first time.
 
 **Never**
 

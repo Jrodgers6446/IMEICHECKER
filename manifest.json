@@ -27,5 +27,5 @@
     "type": "module"
   },
   "permissions": ["contextMenus", "storage"],
-  "optional_host_permissions": ["https://imeidb.xyz/*"]
+  "optional_host_permissions": ["https://imeidb.xyz/*", "https://api.imeigsx.com/*"]
 }

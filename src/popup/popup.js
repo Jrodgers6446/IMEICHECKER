@@ -2,6 +2,7 @@ import { cleanInput, parseImei, formatImei, reportingBody } from '../imei.js';
 import { loadTacDb } from '../tac.js';
 import { lookupImei } from '../lookup.js';
 import { getProvider } from '../providers/index.js';
+import { colorSwatch } from '../colors.js';
 import { getSettings, saveSettings, getHistory, addHistory, clearHistory } from '../storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -59,6 +60,45 @@ function row(label, value, { mono = false, copyable = true } = {}) {
     h('dd', { class: mono ? 'mono' : '' }, value),
     copyable ? copyButton(value, label.toLowerCase()) : h('span'),
   );
+}
+
+function swatch(name) {
+  const hex = colorSwatch(name);
+  if (!hex) return null;
+  const dot = h('span', { class: 'swatch', 'aria-hidden': 'true' });
+  dot.style.background = hex;
+  return dot;
+}
+
+// The Color row is always present so it is clear why it may be empty.
+function createColorRow() {
+  const label = h('dt', {}, 'Color');
+  const value = h('dd', {});
+  let action = h('span');
+  const el = h('div', { class: 'row' }, label, value, action);
+
+  function show(state, { color, provider } = {}) {
+    el.classList.toggle('unavailable', state !== 'found');
+    action.replaceWith((action = state === 'found' ? copyButton(color, 'color') : h('span')));
+    if (state === 'found') {
+      value.replaceChildren(...[swatch(color), color].filter(Boolean));
+    } else if (state === 'loading') {
+      value.replaceChildren(h('span', { class: 'spinner' }), `Asking ${provider.name}...`);
+    } else {
+      const [main, hint] = {
+        offline: [
+          'Not available offline',
+          "An IMEI doesn't encode color. Turn on an online provider that returns it (iSave, Apple devices) in settings.",
+        ],
+        unsupported: [`${provider?.name} doesn't return color`, 'Pick iSave in settings to get color for Apple devices.'],
+        missing: ['Not returned for this device', provider?.colorNote ?? ''],
+        failed: ['Unavailable: the online lookup failed', ''],
+        permission: ['Unavailable: access not granted', ''],
+      }[state];
+      value.replaceChildren(h('span', { class: 'muted-text' }, main), hint ? h('small', { class: 'hint-text' }, hint) : null);
+    }
+  }
+  return { el, show };
 }
 
 function setCounter(length) {
@@ -126,6 +166,13 @@ async function run(parsed) {
     rows.push(row('Brand', local.brand), row('Model', local.model));
     if (local.aliases.length) rows.push(row('Also known as', local.aliases.join(', ')));
   }
+  const colorRow = createColorRow();
+  const provider = getProvider(settings.providerId);
+  const onlineOn = Boolean(settings.onlineLookup && provider && settings.apiKeys[provider.id]);
+  if (!onlineOn) colorRow.show('offline');
+  else if (!provider.returnsColor) colorRow.show('unsupported', { provider });
+  else colorRow.show('loading', { provider });
+  rows.push(colorRow.el);
   rows.push(
     row('TAC', parsed.tac, { mono: true }),
     row('Serial (SNR)', parsed.serial, { mono: true }),
@@ -176,14 +223,15 @@ async function run(parsed) {
     renderHistory();
   }
 
-  await runOnline(parsed, id, { local, title, onlineSlot, entryName });
+  await runOnline(parsed, id, { local, title, onlineSlot, entryName, colorRow });
 }
 
-async function runOnline(parsed, id, { local, title, onlineSlot, entryName }) {
+async function runOnline(parsed, id, { local, title, onlineSlot, entryName, colorRow }) {
   const provider = getProvider(settings.providerId);
   if (!settings.onlineLookup || !provider || !settings.apiKeys[provider.id]) return;
 
   if (!(await chrome.permissions.contains({ origins: [provider.hostPermission] }))) {
+    colorRow.show(provider.returnsColor ? 'permission' : 'unsupported', { provider });
     onlineSlot.replaceChildren(h('p', { class: 'note bad' }, `Access to ${provider.name} was not granted. Open settings and save your key again.`));
     return;
   }
@@ -193,30 +241,35 @@ async function runOnline(parsed, id, { local, title, onlineSlot, entryName }) {
   if (id !== runId) return;
 
   if (remoteError) {
+    colorRow.show(provider.returnsColor ? 'failed' : 'unsupported', { provider });
     onlineSlot.replaceChildren(h('p', { class: 'note bad' }, remoteError));
     return;
   }
 
+  if (remote.color) colorRow.show('found', { color: remote.color });
+  else colorRow.show(provider.returnsColor ? 'missing' : 'unsupported', { provider });
+
   const rows = remote.fields.map((f) => row(f.label, f.value));
   onlineSlot.replaceChildren(
-    h('h3', { class: 'section-title' }, `Online: ${provider.name}`),
-    remote.status ? h('div', { class: 'chips' }, h('span', { class: `chip status ${remote.status.level}` }, `${remote.status.label}: ${remote.status.value}`)) : null,
-    h('dl', { class: 'rows' }, ...rows),
+    ...[
+      h('h3', { class: 'section-title' }, `Online: ${provider.name}`),
+      remote.status ? h('div', { class: 'chips' }, h('span', { class: `chip status ${remote.status.level}` }, `${remote.status.label}: ${remote.status.value}`)) : null,
+      h('dl', { class: 'rows' }, ...rows),
+    ].filter(Boolean),
   );
 
-  const name = remote.fields.find((f) => f.label === 'Name')?.value;
-  if (!local && name) {
-    title.textContent = name;
-    if (settings.saveHistory) {
-      await addHistory({ imei: parsed.imei, name });
-      renderHistory();
-    }
+  const remoteName = remote.fields.find((f) => f.label === 'Name')?.value;
+  const name = local ? entryName : remoteName ?? null;
+  if (!local && remoteName) title.textContent = remoteName;
+  if (settings.saveHistory && (remote.color || (!local && remoteName))) {
+    await addHistory({ imei: parsed.imei, name, color: remote.color });
+    renderHistory();
   }
 }
 
 function bubbleText(title, bubble) {
   const lines = [title.textContent];
-  for (const r of bubble.querySelectorAll('.row')) {
+  for (const r of bubble.querySelectorAll('.row:not(.unavailable)')) {
     lines.push(`${r.querySelector('dt').textContent}: ${r.querySelector('dd').textContent}`);
   }
   for (const chip of bubble.querySelectorAll('.chip.status')) lines.push(chip.textContent);
@@ -243,7 +296,11 @@ async function renderHistory() {
             },
           },
           h('span', { class: 'imei' }, formatImei(entry.imei)),
-          h('span', { class: 'label' }, entry.name ?? 'Unknown device'),
+          h(
+            'span',
+            { class: 'label' },
+            ...[swatch(entry.color), [entry.name ?? 'Unknown device', entry.color].filter(Boolean).join(' · ')].filter(Boolean),
+          ),
         ),
       ),
     ),

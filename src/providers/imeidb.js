@@ -35,6 +35,7 @@ export function normalize(body) {
   const blacklisted = d.blacklist?.status;
   return {
     fields,
+    color: null,
     status:
       typeof blacklisted === 'boolean'
         ? { label: 'Blacklist', value: blacklisted ? 'Blacklisted' : 'Clean', level: blacklisted ? 'bad' : 'good' }
@@ -50,6 +51,8 @@ export const imeidb = {
   hostPermission: 'https://imeidb.xyz/*',
   // Fields this provider can fill in; shown in the settings page.
   provides: 'device specs, manufacturer, device type, blacklist status',
+  returnsColor: false,
+  colorNote: 'ImeiDB does not return color.',
 
   async lookup(imei, apiKey, fetchFn = fetch) {
     const res = await fetchFn(BASE + imei, {

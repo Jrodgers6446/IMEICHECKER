@@ -46,3 +46,11 @@ test('clearHistory removes everything', async () => {
   await clearHistory();
   assert.deepEqual(await getHistory(), []);
 });
+
+test('history keeps the color and a later lookup replaces the earlier entry', async () => {
+  await addHistory({ imei: '353893101224013', name: 'Apple iPhone 11 Pro Max' });
+  await addHistory({ imei: '353893101224013', name: 'Apple iPhone 11 Pro Max', color: 'Midnight Green' });
+  const history = await getHistory();
+  assert.equal(history.length, 1);
+  assert.equal(history[0].color, 'Midnight Green');
+});

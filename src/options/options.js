@@ -15,7 +15,7 @@ function renderProvider() {
   const hasKey = Boolean(settings.apiKeys[provider.id]);
   const info = $('provider-info');
   info.replaceChildren(
-    `Provides: ${provider.provides}. `,
+    `Provides: ${provider.provides}. ${provider.returnsColor ? 'Returns device color.' : 'Does not return device color.'} `,
     Object.assign(document.createElement('a'), { href: provider.docsUrl, target: '_blank', rel: 'noreferrer noopener', textContent: 'API docs' }),
     ' · ',
     Object.assign(document.createElement('a'), { href: provider.signupUrl, target: '_blank', rel: 'noreferrer noopener', textContent: 'Get a key' }),
