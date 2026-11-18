@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IMEI Checker</title>
+    <link rel="stylesheet" href="../ui.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <h1>IMEI Checker</h1>
+      <div class="actions">
+        <button id="theme" class="icon-btn" type="button" aria-label="Switch to dark mode" title="Toggle light / dark">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+        </button>
+        <button id="settings" class="icon-btn" type="button" aria-label="Open settings" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <form id="form" autocomplete="off" novalidate>
+        <label for="imei">IMEI</label>
+        <div class="field">
+          <input id="imei" name="imei" type="text" spellcheck="false" autofocus
+                 placeholder="15 digits, e.g. 49-015420-323751-8"
+                 aria-describedby="hint error" />
+          <span id="counter" class="counter" aria-hidden="true">0/15</span>
+        </div>
+        <p id="hint" class="hint">Type or paste an IMEI. 14 digits? Press Enter and the check digit is added.</p>
+        <p id="error" class="error" role="alert" hidden></p>
+      </form>
+
+      <section id="result" aria-live="polite" aria-label="Result"></section>
+
+      <section id="history-section" hidden>
+        <div class="history-head">
+          <h2>Recent lookups</h2>
+          <button id="clear-history" class="link-btn" type="button">Clear</button>
+        </div>
+        <ul id="history"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --text: #151a2d;
+  --muted: #5b6482;
+  --border: #d8deec;
+  --accent: #3b5bdb;
+  --accent-text: #ffffff;
+  --good: #0b7a43;
+  --good-bg: #dff5e8;
+  --bad: #b3261e;
+  --bad-bg: #fde7e5;
+  --warn: #8a5a00;
+  --warn-bg: #fff1d0;
+  --shadow: 0 1px 2px rgb(21 26 45 / 8%), 0 6px 18px rgb(21 26 45 / 8%);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #11141f;
+  --surface: #1a1f30;
+  --surface-2: #232940;
+  --text: #e8ecf8;
+  --muted: #a1abc8;
+  --border: #2f3652;
+  --accent: #8ea2ff;
+  --accent-text: #11141f;
+  --good: #6ee7a2;
+  --good-bg: #123a27;
+  --bad: #ff9c94;
+  --bad-bg: #4a1d1a;
+  --warn: #ffd37a;
+  --warn-bg: #43330c;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 6px 18px rgb(0 0 0 / 30%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #11141f;
+    --surface: #1a1f30;
+    --surface-2: #232940;
+    --text: #e8ecf8;
+    --muted: #a1abc8;
+    --border: #2f3652;
+    --accent: #8ea2ff;
+    --accent-text: #11141f;
+    --good: #6ee7a2;
+    --good-bg: #123a27;
+    --bad: #ff9c94;
+    --bad-bg: #4a1d1a;
+    --warn: #ffd37a;
+    --warn-bg: #43330c;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 6px 18px rgb(0 0 0 / 30%);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btn {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.btn:hover {
+  background: var(--surface-2);
+}
+
+.btn.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chip.good {
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+.chip.bad {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.chip.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
