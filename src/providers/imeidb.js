@@ -49,7 +49,6 @@ export const imeidb = {
   docsUrl: 'https://imeidb.xyz/api',
   signupUrl: 'https://imeidb.xyz/',
   hostPermission: 'https://imeidb.xyz/*',
-  // Fields this provider can fill in; shown in the settings page.
   provides: 'device specs, manufacturer, device type, blacklist status',
   returnsColor: false,
   colorNote: 'ImeiDB does not return color.',

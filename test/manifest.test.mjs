@@ -51,3 +51,15 @@ test('each provider host is declared as an optional permission', async () => {
   const { providers } = await import('../src/providers/index.js');
   for (const p of providers) assert.ok(manifest.optional_host_permissions.includes(p.hostPermission), p.id);
 });
+
+test('code license is proprietary and the data license is kept separately', () => {
+  const pkg = JSON.parse(readFileSync(new URL('package.json', root), 'utf8'));
+  assert.equal(pkg.license, 'SEE LICENSE IN LICENSE');
+  const license = readFileSync(new URL('LICENSE', root), 'utf8');
+  assert.match(license, /All rights reserved/);
+  assert.match(license, /SageWorkx/);
+  assert.ok(!/Permission is hereby granted/.test(license));
+  const dataLicense = readFileSync(new URL('DATA-LICENSE.md', root), 'utf8');
+  assert.match(dataLicense, /Attribution-ShareAlike 3\.0/);
+  assert.ok(exists('SECURITY.md'));
+});

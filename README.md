@@ -26,6 +26,8 @@ _The last screenshot used a locally simulated iSave response._
 
 ## Install (unpacked)
 
+This is how the extension is loaded for development and review. Running your own copy needs written permission, see [License](#license).
+
 1. Clone this repo.
 2. Open `chrome://extensions` and turn on **Developer mode**.
 3. Click **Load unpacked** and pick the repo folder (the one containing `manifest.json`).
@@ -38,8 +40,8 @@ There is no build step. The files in the repo are the extension.
 The offline lookup uses the **[Osmocom TAC database](http://tacdb.osmocom.org/)**, a community-maintained list of Type Allocation Codes, downloaded from `http://tacdb.osmocom.org/export/tacdb.csv` on 2026-11-18.
 
 - License: **Creative Commons Attribution-ShareAlike 3.0 Unported** ([summary](https://creativecommons.org/licenses/by-sa/3.0/), [legal code](https://creativecommons.org/licenses/by-sa/3.0/legalcode)). The CSV header reads "Osmocom TAC database under CC-BY-SA v3.0 (c) Harald Welte 2016".
-- `data/tacdb.json` is an adapted form of that data (CSV converted to compact JSON, brand names shared in a table, duplicate aliases removed, GSMArena links reduced to a path, contributor and comment columns dropped). It stays under CC BY-SA 3.0. See [`data/ATTRIBUTION.md`](data/ATTRIBUTION.md).
-- The extension code is MIT licensed (see [`LICENSE`](LICENSE)). The data file is not covered by that license.
+- `data/tacdb.json` is an adapted form of that data (CSV converted to compact JSON, brand names shared in a table, duplicate aliases removed, GSMArena links reduced to a path, contributor and comment columns dropped). It stays under CC BY-SA 3.0.
+- Credit and the list of changes are in [`DATA-LICENSE.md`](DATA-LICENSE.md). That license stays with the data file and any adaptation of it.
 
 What it contains: 22,523 TACs across 568 brands. Osmocom is crowdsourced, so it is strongest on older phones and misses many recent models. A miss is shown as "Not in offline database", never guessed. The authoritative list is the GSMA's, which is not public.
 
@@ -129,6 +131,14 @@ data/tacdb.json       bundled TAC data (CC BY-SA 3.0)
 scripts/              data and icon generators
 test/                 node:test suites
 ```
+
+## License
+
+The code in this repository is proprietary. Copyright SageWorkx, all rights reserved. The source is public so you can read it, but you may not copy, modify, redistribute, fork for use or use it commercially without written permission. See [`LICENSE`](LICENSE).
+
+The bundled TAC dataset (`data/tacdb.json`) is a different case: it comes from the Osmocom TAC database and keeps its own CC BY-SA 3.0 license, described in [`DATA-LICENSE.md`](DATA-LICENSE.md). The proprietary license does not apply to it and it does not change that license.
+
+Security reports: see [`SECURITY.md`](SECURITY.md).
 
 ## Privacy
 
