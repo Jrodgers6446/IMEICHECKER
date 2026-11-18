@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "IMEI Checker",
   "version": "1.0.0",
-  "description": "Validate an IMEI and see its brand and model instantly, using a bundled offline TAC database.",
+  "description": "Check an IMEI and see the device brand and model right away, using a bundled offline database.",
   "minimum_chrome_version": "127",
   "icons": {
     "16": "icons/icon-16.png",
